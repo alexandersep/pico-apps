@@ -1,0 +1,30 @@
+Running Sequential code
+The approximation error for the single-precision representation is 0.00024310000
+Pi calculation (single precision) of limit 10000 is 3.14134955400
+Approximate time taken for single (single-precision) function 34.695000 milliseconds
+
+The approximation error for the double-precision representation is 0.00007853500
+Pi calculation (single double) of limit 10000 is 3.14151411900
+Approximate time taken for single (double-precision) function 73.120000 milliseconds
+Approximate time taken for application to run in sequential mode is 143.213000 milliseconds
+
+Running Parallel code
+The approximation error for the double-precision representation is 0.00024310000
+Pi calculation (single precision) of limit 10000 is 3.14134955400
+Approximate time taken for single (single-precision) function 36.276000 milliseconds
+
+The approximation error for the double-precision representation is 0.00007853500
+Pi calculation (single double) of limit 10000 is 3.14151411900
+Approximate time taken for single (double-precision) function 75.029000 milliseconds
+
+Approximate time taken for application to run in parrallel mode is 92.819000 milliseconds
+
+Executing and timing the individual functions should return a similar value as we are
+merely timing a single function running on a single core.
+
+However as seen from our results if we time the code to execute both functions and we
+execute two functions in a parallel way (e.g. using two cores 1 core for each function)
+then we should be expected to take less time, roughly twice as less, our values
+were 92.819000 for parallel and 143.213000 for sequential. Not exactly half but there is some error
+and the second core clearly is being used to speed up our computation which is the purpose of these
+observations.

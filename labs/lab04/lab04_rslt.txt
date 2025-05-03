@@ -1,0 +1,78 @@
+# Info registers 
+r0             0x2000026c          536871532
+r1             0x100003a3          268436387
+r2             0x200001b0          536871344
+r3             0x2000026c          536871532
+r4             0x10000264          268436068
+r5             0x20041f01          537140993
+r6             0x18000000          402653184
+r7             0x0                 0
+r8             0xffffffff          -1
+r9             0xffffffff          -1
+r10            0xffffffff          -1
+r11            0xffffffff          -1
+r12            0x34000040          872415296
+sp             0x20042000          0x20042000
+lr             0x10000223          268436003
+pc             0x100003a2          0x100003a2 <main>
+xPSR           0x61000000          1627389952
+msp            0x20042000          0x20042000
+psp            0xfffffffc          0xfffffffc
+primask        0x0                 0
+basepri        0x0                 0
+faultmask      0x0                 0
+control        0x0                 0
+
+# disassemble main_asm, +26
+Dump of assembler code from 0x100003b0 to 0x100003ca:
+   0x100003b0 <main_asm+0>:	movs	r0, #25
+   0x100003b2 <main_asm+2>:	bl	0x1000035c <asm_gpio_init>
+   0x100003b6 <main_asm+6>:	movs	r0, #25
+   0x100003b8 <main_asm+8>:	movs	r1, #1
+   0x100003ba <main_asm+10>:	bl	0x10000364 <asm_gpio_set_dir>
+   0x100003be <loop+0>:	ldr	r0, [pc, #36]	; (0x100003e4 <led_set_state+8>)
+   0x100003c0 <loop+2>:	bl	0x10000e78 <sleep_ms>
+   0x100003c4 <loop+6>:	bl	0x100003ca <sub_toggle>
+   0x100003c8 <loop+10>:	b.n	0x100003be <loop>
+End of assembler dump.
+
+# What is the entry point address (in hex) of the *blink_asm* application?
+# If I look at the first instruction when running the programme from the 
+# beginning also known as the PC (programme counter) then the answer is 
+# found here
+# pc             0x100003a2          0x100003a2 <main>
+# So, the answer is 0x100003a2 (in hex)
+
+# What is the entry point address (in hex) of the "main_asm" function?
+# The answer works similar to the previous answer, we must look at the
+# pc register when we enter the function, and this is 
+# pc             0x100003b0          0x100003b0 <main_asm>
+# So, the answer is 0x100003b0  (in hex)
+
+# The main differences between gdb and the assembly written are: 
+# 1. The constant "names" such as #LED_GPIO_PIN are replaced with 
+#    their corresponding values.
+# 2. When branching to the function main_asm, it is replaced with the pc
+#    address instead of the one written, the name of the funciton.
+# 3. When loading r0 after the the label loop:, gdb uses register offsets
+#    ldr     r0, [pc, #36]   ; (0x100003e4 <led_set_state+8>)
+#    the reason is because the opcode is only 250 long and so it puts it closely
+#    by having a pc and incrementing 36 (since of the restriction).
+#    where as our written assembly gives the offset a name, SLEEP_TIME which 
+#    it's value is seen above the programme (.equ SLEEP_TIME, 500)
+# 4. Before every instruction in gdb, the address is visible 
+#    e.g. 0x100003b0 <main_asm+0>: 
+#    where as in our written assembly we must look at the registers itself.
+# 5. The comments use the ; syntax, where ours uses the @ syntax, it does not 
+#    actually matter, and we are allowed to use ;, however this is a difference and
+#    so I will note it here.
+# 6. When branching to the label loop:, in our written assembly we use `b` syntax
+#    where as gdb uses `b.n` syntax
+# 7. Before branching to the address it hard codes in, in gdb, it gives you the name
+#    of the branch branching to (inside the <>) e.g. bl 0x100003ca <sub_toggle>
+#    In our written assebmly it is just the name of the function e.g. bl sub_toggle
+# 8. When inside the loop: label and gdb wants to loop back using b.n (name of address)
+#    It will give the address that can be seen in the same line the instruction 
+#    ldr r0, [pc, #36]; (0x100003e4 <led_set_state+8>)
+#    where as in our written assembly we give the label instead of an address, and that
+#    label is right before the instruction that we want executed.

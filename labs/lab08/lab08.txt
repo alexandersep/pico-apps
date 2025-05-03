@@ -1,0 +1,87 @@
+# Lab08 
+
+## Answers to Questions 
+
+1. Caching gives programmers expensive (as there isn't much of it) 
+but more performance. It is a temporary storage used for fast 
+look up. The speeds up in perfomance is massive as the CPU needs 
+to fetch instructions to execute them and if the data that needs
+to be fetched takes a while to get to the CPU that will slow down 
+the execution time. Therefore having cache, memory close to the 
+CPU for instructions will cause the CPU to execute instead of wait 
+for instructions to be fetched.
+Caches reduce power consumption which is good for reducing 
+environmental impact, which is important for us developers to put
+in consideration for our future generation as a species.
+
+2.
+Write-Through 
+* All copies of the data in the cache are updates straight away
+* Simple to conceptualise and good for multiple-bus-master systems
+* Cache operation is slower and has higher bus bandwidth requirements
+  (write-back)
+Write-Back
+* The write is only sent to the memory when the cache entry is 
+  evicted (or the system isn't busy)
+* Any pending changes are written back to main memory at that point
+* Is faster than write-through and has lower memory bandwidth 
+  requirements
+* Many cause issues for multiprocessor or multi-bus-master sytems
+  (coherency)
+
+3. 
+Full Associative memory
+* There is only **one set** in the cache
+* Each locaiton in the main memory can go in any of the entries 
+  of the cache
+* Full-associative caches are the opposite of direct-mapped caches, 
+  and they require the most amount of SOC (System on chip) 
+  area to implement
+Direct Associativity
+* There are **one ore more sets in the cache** 
+* Each locaiton in the main memory can go in **only one entry**
+  in the cahce
+* Direct-mapped cahces are the opposite of fully-associcative caches,
+  and they require the least amount of SOC (System on chip)
+  area to implement
+N-way Set Associativity
+* There are **one or more sets** in the cache
+* Each location in the main memory can go in **one of N locations** in the
+  cache
+* Set associative caches are a compromise between fully associative and
+  direct-mapped caches (operation, performance and SOC area to implement)
+
+4. Cache is scarce, it is managed using a Cache Hierarchy
+Caches have 2-3 levels of hierarchy.
+L1 cache, L2 cache, L3 cache. Starting from L1 it starts of at a 
+small size closer to the CPU, generally coupled with a single cpu core
+L2 cache then is the second layer where it's a fallback of L1 missed
+caches. Can be shared between multiple CPU's
+L3 cache. In the case of L2 misses. Can be shared between multiple 
+CPU's. Traversing every level, there becomes more space for the cost
+of speed. As it's not as close to the cpu. however still far closer
+than storage such as hard disks.
+The are organised in block frames each capable of holding a copy
+of a portion of contigous main memory in a structure called a "cache 
+line" or a "cache block". Associted with each block frame cache is 
+a cache line with tag RAM confaining information about where it's from
+in main memory. Flags are used to manage the cache line. When an 
+access is made, the tag RAM contents indicates whether a block 
+contains a cached copy of the memory location.
+
+5. 
+    movs r0, #8
+loop:
+    ldr  r1, [r2]
+    str  r2, [r2]
+    subs r0, #4
+    adds r1, #4
+    b    loop
+* An *un-cached instruction* normally takes 10 ns to run and cached
+  instruction normally takes 1ns.
+* If the instruciton is *memory load (LDR) instruction*, it will take an
+  *extra 10ns if the location to be loaded from is un-cached*, and no extra
+  time if the location is already cached.
+* If the instruction is a *memory store (STR) instruction*, it will *always
+  take an extra 10 ns* to write the data to the location because write-through
+  caching is enabled*
